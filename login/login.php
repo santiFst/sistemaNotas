@@ -8,43 +8,44 @@
 </head>
 
 <body>
+<body>
 
-<div class="login">
-    <h1>Sistema de Gestión de Notas</h1>
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1>Sistema de Gestión de Notas</h1>
+
         <p>Por favor, ingrese sus credenciales para acceder al sistema</p>
 
+        <form action="validar_login.php" method="POST">
 
-    <form action="validar_login.php" method="POST">
+            <label>Código docente</label>
 
-        <br>
-        <p>Código docente:</p>
-        <br>
+            <input
+                type="number"
+                name="cod_docente"
+                placeholder="Ingrese su código"
+                required>
 
-        <input
-            type="number"
-            name="cod_docente"
-            required>
+            <label>Contraseña</label>
 
-        <br><br>
+            <input
+                type="password"
+                name="clave"
+                placeholder="Ingrese su contraseña"
+                required>
 
-        <p>Contraseña:</p>
-        <br>
+            <button type="submit">
+                Ingresar
+            </button>
 
-        <input
-            type="password"
-            name="clave"
-            required>
+        </form>
 
-        <br><br>
+    </div>
 
-        <button type="submit">
-            Ingresar
-        </button>
-        <br><br>
-    </form>
-
-    </label>
 </div>
+
 </body>
 
 </html>

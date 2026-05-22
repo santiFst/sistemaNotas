@@ -26,6 +26,8 @@ if (!isset($_SESSION['docente'])) {
 
 <body>
 
+<div class="contenedor">
+
     <h1>
         Sistema de Gestión de Notas
     </h1>
@@ -83,6 +85,8 @@ if (!isset($_SESSION['docente'])) {
     <a href="login/logout.php">
         Cerrar sesión
     </a>
+
+</div>
 
 </body>
 
