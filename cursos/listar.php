@@ -4,7 +4,11 @@ if (!isset($_SESSION['docente'])) { header("Location: ../login/login.php"); exit
 require_once(__DIR__ . "/../config/conexion.php");
 require_once(__DIR__ . "/../assets/layout.php");
 
-$sql = "SELECT * FROM curso ORDER BY id_curso";
+//$sql = "SELECT * FROM curso ORDER BY id_curso";
+$sql = "SELECT c.id_curso, c.nombre_curso, c.cod_docente, d.nombres, d.apellidos
+        FROM curso c
+        JOIN docente d ON c.cod_docente = d.cod_docente
+        ORDER BY c.id_curso";
 $resultado = pg_query($conexion, $sql);
 
 layout_header('Cursos', 'cursos', 1);
@@ -36,7 +40,7 @@ layout_header('Cursos', 'cursos', 1);
             <tr>
                 <td><span class="badge badge-blue"><?= htmlspecialchars($fila['id_curso']) ?></span></td>
                 <td><?= htmlspecialchars($fila['nombre_curso']) ?></td>
-                <td><?= htmlspecialchars($fila['cod_docente']) ?></td>
+                <td><?= htmlspecialchars($fila['nombres'] . ' ' . $fila['apellidos']) ?></td>
                 <td>
                     <div class="action-links">
                         <a href="editar.php?id_curso=<?= $fila['id_curso'] ?>" class="action-link action-edit">Editar</a>
