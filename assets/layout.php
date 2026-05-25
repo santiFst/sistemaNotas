@@ -77,7 +77,7 @@ function layout_footer(): void {
     ?>
 </main>
 <footer class="page-footer">
-    &copy; <?= date('Y') ?> Sistema de Gesti&oacute;n de Notas &mdash; Desarrollado con PHP &amp; PostgreSQL
+    &copy; <?= date('Y') ?> Sistema de Gesti&oacute;n de Notas &mdash; Desarrollado por Carlos Acebedo &amp; David Alonso
 </footer>
 </body>
 </html>
