@@ -1,165 +1,67 @@
 <?php
-
 session_start();
-
-if (!isset($_SESSION['docente'])) {
-
-    header("Location: ../login/login.php");
-    exit();
-}
-
+if (!isset($_SESSION['docente'])) { header("Location: ../login/login.php"); exit(); }
 require_once(__DIR__ . "/../config/conexion.php");
+require_once(__DIR__ . "/../assets/layout.php");
 
-$id_inscripcion = $_GET['id_inscripcion'];
-
-$sql = "
-    SELECT *
-    FROM inscripcion
-    WHERE id_inscripcion = $id_inscripcion
-";
-
-$resultado = pg_query($conexion, $sql);
-
-$inscripcion = pg_fetch_assoc($resultado);
-
-$sql_estudiantes = "
-    SELECT *
-    FROM estudiante
-    ORDER BY apellidos
-";
-
-$estudiantes = pg_query($conexion, $sql_estudiantes);
-
-$sql_cursos = "
-    SELECT *
-    FROM curso
-    ORDER BY nombre_curso
-";
-
-$cursos = pg_query($conexion, $sql_cursos);
+$id_inscripcion = (int)$_GET['id_inscripcion'];
+$resultado      = pg_query($conexion, "SELECT * FROM inscripcion WHERE id_inscripcion = $id_inscripcion");
+$inscripcion    = pg_fetch_assoc($resultado);
+$estudiantes    = pg_query($conexion, "SELECT * FROM estudiante ORDER BY apellidos");
+$cursos         = pg_query($conexion, "SELECT * FROM curso ORDER BY nombre_curso");
+$error          = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $cod_estudiante = (int)$_POST['cod_estudiante'];
+    $id_curso       = (int)$_POST['id_curso'];
 
-    $cod_estudiante = $_POST['cod_estudiante'];
-    $id_curso = $_POST['id_curso'];
+    $res = pg_query($conexion, "UPDATE inscripcion SET cod_estudiante=$cod_estudiante, id_curso=$id_curso WHERE id_inscripcion=$id_inscripcion");
 
-    $sql_update = "
-        UPDATE inscripcion
-        SET
-            cod_estudiante = $cod_estudiante,
-            id_curso = $id_curso
-        WHERE id_inscripcion = $id_inscripcion
-    ";
-
-    $resultado_update = pg_query($conexion, $sql_update);
-
-    if (!$resultado_update) {
-
-        echo pg_last_error($conexion);
-        exit();
+    if (!$res) {
+        $error = pg_last_error($conexion);
+    } else {
+        header("Location: listar.php"); exit();
     }
-
-    header("Location: listar.php");
-    exit();
 }
 
+layout_header('Editar Inscripción', 'inscripciones', 1);
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <title>
-        Editar Inscripción
-    </title>
-
-</head>
-
-<body>
-    <link rel="stylesheet" href="../assets/css/styles.css">
-
-    <h1>Editar Inscripción</h1>
-
-    <form method="POST">
-
-        <label>Estudiante:</label>
-
-        <br>
-
-        <select name="cod_estudiante" required>
-
-            <?php while ($estudiante = pg_fetch_assoc($estudiantes)) { ?>
-
-                <option
-                    value="<?php echo $estudiante['cod_estudiante']; ?>"
-
-                    <?php
-                    if (
-                        $estudiante['cod_estudiante']
-                        ==
-                        $inscripcion['cod_estudiante']
-                    ) {
-                        echo "selected";
-                    }
-                    ?>>
-
-                    <?php
-                    echo
-                    $estudiante['apellidos']
-                    . " "
-                    . $estudiante['nombres'];
-                    ?>
-
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-        <br><br>
-
-        <label>Curso:</label>
-
-        <br>
-
-        <select name="id_curso" required>
-
-            <?php while ($curso = pg_fetch_assoc($cursos)) { ?>
-
-                <option
-                    value="<?php echo $curso['id_curso']; ?>"
-
-                    <?php
-                    if (
-                        $curso['id_curso']
-                        ==
-                        $inscripcion['id_curso']
-                    ) {
-                        echo "selected";
-                    }
-                    ?>>
-
-                    <?php echo $curso['nombre_curso']; ?>
-
-                </option>
-
-            <?php } ?>
-
-        </select>
-
-        <br><br>
-
-        <button type="submit">
-
-            Actualizar
-
-        </button>
-
-    </form>
-
-</body>
-
-</html>
+<div class="page-header">
+    <div>
+        <h1>Editar Inscripción</h1>
+        <div class="breadcrumb"><a href="../dashboard.php">Dashboard</a> › <a href="listar.php">Inscripciones</a> › Editar</div>
+    </div>
+</div>
+<?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
+<div class="form-card">
+    <div class="form-card-header"><h1>Datos de la Inscripción</h1></div>
+    <div class="form-card-body">
+        <form method="POST">
+            <div class="form-group">
+                <label>Estudiante <span class="req">*</span></label>
+                <select name="cod_estudiante" required>
+                    <?php while ($e = pg_fetch_assoc($estudiantes)): ?>
+                    <option value="<?= $e['cod_estudiante'] ?>" <?= $e['cod_estudiante'] == $inscripcion['cod_estudiante'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($e['apellidos'] . ', ' . $e['nombres']) ?>
+                    </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Curso <span class="req">*</span></label>
+                <select name="id_curso" required>
+                    <?php while ($c = pg_fetch_assoc($cursos)): ?>
+                    <option value="<?= $c['id_curso'] ?>" <?= $c['id_curso'] == $inscripcion['id_curso'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($c['nombre_curso']) ?>
+                    </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a href="listar.php" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+<?php layout_footer(); ?>
