@@ -10,7 +10,7 @@ layout_header('Dashboard', 'dashboard', 0);
 
 <div class="page-header">
     <div>
-        <h1>Dashboard</h1>
+        <h1>Inicio</h1>
         <div class="breadcrumb">Sistema de Gestión de Notas</div>
     </div>
 </div>

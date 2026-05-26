@@ -6,7 +6,7 @@
 function layout_header(string $title, string $active = '', int $depth = 0): void {
     $root = str_repeat('../', $depth);
     $nav  = [
-        'dashboard'     => ['icon' => '&#x1F3E0;', 'label' => 'Dashboard',      'href' => 'dashboard.php'],
+        'dashboard'     => ['icon' => '&#x1F3E0;', 'label' => 'Inicio',      'href' => 'dashboard.php'],
         'estudiantes'   => ['icon' => '&#x1F393;', 'label' => 'Estudiantes',    'href' => 'estudiantes/listar.php'],
         'cursos'        => ['icon' => '&#x1F4DA;', 'label' => 'Cursos',         'href' => 'cursos/listar.php'],
         'evaluaciones'  => ['icon' => '&#x1F4DD;', 'label' => 'Evaluaciones',   'href' => 'evaluaciones/listar.php'],

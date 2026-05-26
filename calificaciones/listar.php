@@ -4,13 +4,29 @@ if (!isset($_SESSION['docente'])) { header("Location: ../login/login.php"); exit
 require_once(__DIR__ . "/../config/conexion.php");
 require_once(__DIR__ . "/../assets/layout.php");
 
+$filtroCurso = isset($_GET['id_curso']) ? (int)$_GET['id_curso'] : 0;
+
+$cursos = pg_query($conexion, "
+    SELECT id_curso, nombre_curso
+    FROM curso
+    ORDER BY nombre_curso
+");
+
+
+$where = "";
+
+if ($filtroCurso > 0) {
+    $where = "WHERE cu.id_curso = $filtroCurso";
+}
+
 $sql = "SELECT c.id_calificacion, e.nombres, e.apellidos, cu.nombre_curso,
                ev.descripcion, ev.porcentaje, c.valor
         FROM calificacion c
         INNER JOIN inscripcion i  ON c.id_inscripcion = i.id_inscripcion
-        INNER JOIN estudiante e   ON i.cod_estudiante  = e.cod_estudiante
-        INNER JOIN curso cu       ON i.id_curso        = cu.id_curso
-        INNER JOIN evaluacion ev  ON c.id_evaluacion   = ev.id_evaluacion
+        INNER JOIN estudiante e   ON i.cod_estudiante = e.cod_estudiante
+        INNER JOIN curso cu       ON i.id_curso = cu.id_curso
+        INNER JOIN evaluacion ev  ON c.id_evaluacion = ev.id_evaluacion
+        $where
         ORDER BY cu.nombre_curso, e.apellidos, ev.posicion";
 $resultado = pg_query($conexion, $sql);
 
@@ -31,6 +47,37 @@ layout_header('Calificaciones', 'calificaciones', 1);
     <a href="crear.php" class="btn btn-orange">+ Nueva Calificacion</a>
 </div>
 
+<div class="card" style="margin-bottom:20px;padding:15px;">
+    <form method="GET" style="display:flex;gap:10px;align-items:center;">
+
+        <label for="id_curso">
+            <strong>Curso:</strong>
+        </label>
+
+        <select name="id_curso" id="id_curso">
+            <option value="0">Todos los cursos</option>
+
+            <?php while ($curso = pg_fetch_assoc($cursos)): ?>
+                <option value="<?= $curso['id_curso'] ?>"
+                    <?= ($filtroCurso == $curso['id_curso']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($curso['nombre_curso']) ?>
+                </option>
+            <?php endwhile; ?>
+
+        </select>
+
+        <button type="submit" class="btn btn-orange">
+            Filtrar
+        </button>
+
+        <?php if ($filtroCurso > 0): ?>
+            <a href="listar.php" class="btn btn-secondary">
+                Limpiar
+            </a>
+        <?php endif; ?>
+
+    </form>
+</div>
 <div class="table-container">
     <div class="table-toolbar">
         <strong style="font-family:var(--font-main);font-size:.9rem;color:var(--moodle-blue)">Lista de Calificaciones</strong>

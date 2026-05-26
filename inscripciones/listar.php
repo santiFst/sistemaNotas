@@ -45,7 +45,6 @@ layout_header('Inscripciones', 'inscripciones', 1);
                 <td><?= htmlspecialchars($fila['nombre_curso']) ?></td>
                 <td>
                     <div class="action-links">
-                        <a href="editar.php?id_inscripcion=<?= $fila['id_inscripcion'] ?>" class="action-link action-edit">Editar</a>
                         <a href="eliminar.php?id_inscripcion=<?= $fila['id_inscripcion'] ?>" class="action-link action-delete"
                            onclick="return confirm('¿Eliminar esta inscripción?')">Eliminar</a>
                     </div>
