@@ -102,9 +102,14 @@ layout_header('Crear Estudiante', 'estudiantes', 1);
                 <input type="hidden" name="modo" value="manual">
                 <div class="form-group">
                     <label>Código del Estudiante <span class="req">*</span></label>
-                    <input type="text" name="cod_estudiante"
-                           value="<?= htmlspecialchars($_POST['cod_estudiante'] ?? '') ?>"
-                           placeholder="Ej: 160005001" required>
+                    <input type="text"
+                        name="cod_estudiante"
+                        value="<?= htmlspecialchars($_POST['cod_estudiante'] ?? '') ?>"
+                        placeholder="Ej: 160005001"
+                        pattern="[0-9]+"
+                        inputmode="numeric"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                    required>
                     <small style="color:var(--moodle-gray-text);font-size:.78rem">
                         Debe coincidir con el código institucional único del estudiante.
                     </small>
