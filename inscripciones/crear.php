@@ -57,7 +57,7 @@ layout_header('Nueva Inscripción', 'inscripciones', 1);
             </div>
             <div class="form-group">
                 <label>Año <span class="req">*</span></label>
-                <input type="number" name="anio" min="2000" max="2100" value="<?= date('Y') ?>" required>
+                <input type="number" name="anio" min="2026" max="2099" value="<?= date('Y') ?>" required>
             </div>
             <div class="form-group">
                 <label>Período <span class="req">*</span></label>

@@ -23,7 +23,15 @@
             <form action="validar_login.php" method="POST">
                 <div class="form-group">
                     <label for="cod_docente">Código de Docente <span class="req">*</span></label>
-                    <input type="number" id="cod_docente" name="cod_docente" placeholder="Ej: 1001" required>
+                    
+                    <input type="text" 
+                        id="cod_docente" 
+                        name="cod_docente" 
+                        placeholder="Ej: 1001" 
+                        pattern="[0-9]+"
+                        inputmode="numeric"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                    required>
                 </div>
                 <div class="form-group">
                     <label for="clave">Contraseña <span class="req">*</span></label>
